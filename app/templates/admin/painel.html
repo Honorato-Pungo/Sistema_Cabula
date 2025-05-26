@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Painel Administrativo{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Painel Administrativo</h1>
+    
+    <div class="row">
+        <!-- Card de Usuários -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Usuários</h5>
+                    <h2 class="card-text">{{ total_usuarios }}</h2>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card de Trabalhos Pendentes -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Trabalhos Pendentes</h5>
+                    <h2 class="card-text">{{ trabalhos_pendentes }}</h2>
+                    <a href="{{ url_for('admin.trabalhos_pendentes') }}" class="text-white">Ver todos</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card de Solicitações de Upgrade -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Solicitações de Upgrade</h5>
+                    <h2 class="card-text">{{ solicitacoes_pendentes }}</h2>
+                    <a href="{{ url_for('admin.solicitacoes_upgrade') }}" class="text-white">Ver todas</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card de Trabalhos Aprovados -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Trabalhos Aprovados</h5>
+                    <h2 class="card-text">{{ trabalhos_aprovados }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Seção de Ações Rápidas -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Ações Rápidas</h5>
+        </div>
+        <div class="card-body">
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('admin.trabalhos_pendentes') }}" class="btn btn-primary">
+                    Gerenciar Trabalhos Pendentes
+                </a>
+                <a href="{{ url_for('admin.solicitacoes_upgrade') }}" class="btn btn-info">
+                    Gerenciar Solicitações de Upgrade
+                </a>
+                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#adminModal">
+                    Criar Novo Administrador
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para criar novo admin -->
+<div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="adminModalLabel">Criar Novo Administrador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin.criar_admin') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="adminEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="adminEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="adminSenha" class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="adminSenha" name="senha" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Criar Administrador</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

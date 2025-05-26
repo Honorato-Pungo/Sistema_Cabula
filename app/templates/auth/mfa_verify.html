@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Verificação MFA{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Verificação em Duas Etapas</h4>
+            </div>
+            <div class="card-body">
+                <p>Enviamos um código de verificação para o seu email. Por favor, insira-o abaixo:</p>
+                <form method="POST" action="{{ url_for('auth.mfa_verify') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.mfa_code.label(class="form-label") }}
+                        {{ form.mfa_code(class="form-control") }}
+                        {% if form.mfa_code.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.mfa_code.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

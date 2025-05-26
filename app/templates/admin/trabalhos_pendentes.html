@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Trabalhos Pendentes{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Trabalhos Pendentes de Aprovação</h1>
+</div>
+
+{% if trabalhos %}
+<div class="list-group">
+    {% for trabalho in trabalhos %}
+    <div class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ trabalho.titulo }}</h5>
+            <small class="text-muted">{{ trabalho.data_submissao.strftime('%d/%m/%Y') }}</small>
+        </div>
+        <p class="mb-1">
+            <strong>Autor(es):</strong> {{ trabalho.autores }}<br>
+            <strong>Disciplina:</strong> {{ trabalho.disciplina }} | 
+            <strong>Tipo:</strong> {{ trabalho.tipo|capitalize }}<br>
+            <strong>Submetido por:</strong> {{ trabalho.autor.nome }} ({{ trabalho.autor.email }})
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+                <span class="badge bg-warning text-dark">Pendente</span>
+                <span class="ms-2 badge bg-info text-dark">{{ trabalho.nivel_acesso|capitalize }}</span>
+            </small>
+            <div>
+                <a href="{{ url_for('static', filename='uploads/trabalhos/' + trabalho.arquivo) }}" class="btn btn-sm btn-outline-primary" download target="_blank">Visualizar</a>
+                <a href="{{ url_for('admin.aprovar_trabalho', trabalho_id=trabalho.id) }}" class="btn btn-sm btn-outline-success ms-2">Aprovar/Rejeitar</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-success">Nenhum trabalho pendente de aprovação!</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Provas{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Provas e Resoluções</h1>
+    {% if current_user.plano == 'premium' %}
+    <a href="{{ url_for('main.nova_prova') }}" class="btn btn-primary">Nova Prova</a>
+    {% endif %}
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form class="row g-3">
+            <div class="col-md-5">
+                <label for="disciplina" class="form-label">Disciplina</label>
+                <select id="disciplina" class="form-select" name="disciplina">
+                    <option value="">Todas</option>
+                    {% for disciplina in disciplinas %}
+                    <option value="{{ disciplina }}" {% if request.args.get('disciplina') == disciplina %}selected{% endif %}>{{ disciplina }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-5">
+                <label for="professor" class="form-label">Professor</label>
+                <input type="text" class="form-control" id="professor" name="professor" placeholder="Nome do professor" value="{{ request.args.get('professor', '') }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="list-group">
+    {% for prova in provas %}
+    <div class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ prova.disciplina }}</h5>
+            <small class="text-muted">{{ prova.data_prova.strftime('%d/%m/%Y') }}</small>
+        </div>
+        <p class="mb-1">
+            <strong>Professor:</strong> {{ prova.professor }}<br>
+            <strong>Enunciado:</strong> {{ prova.arquivo_enunciado }}<br>
+            {% if prova.arquivo_resolucao %}
+            <strong>Resolução:</strong> {{ prova.arquivo_resolucao }}
+            {% endif %}
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">Submetido em {{ prova.data_submissao.strftime('%d/%m/%Y') }}</small>
+            <div>
+                <a href="{{ url_for('static', filename='uploads/provas/' + prova.arquivo_enunciado) }}" class="btn btn-sm btn-outline-primary" download>Baixar Enunciado</a>
+                {% if prova.arquivo_resolucao %}
+                <a href="{{ url_for('static', filename='uploads/provas/' + prova.arquivo_resolucao) }}" class="btn btn-sm btn-outline-secondary ms-2" download>Baixar Resolução</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">Nenhuma prova encontrada.</div>
+    {% endfor %}
+</div>
+{% endblock %}

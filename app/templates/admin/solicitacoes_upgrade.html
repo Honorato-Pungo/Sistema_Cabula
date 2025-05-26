@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitações de Upgrade{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Solicitações de Upgrade para Premium</h1>
+</div>
+
+{% if solicitacoes %}
+<div class="list-group">
+    {% for solicitacao in solicitacoes %}
+    <div class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ solicitacao.usuario.nome }}</h5>
+            <small class="text-muted">{{ solicitacao.data_solicitacao.strftime('%d/%m/%Y') }}</small>
+        </div>
+        <p class="mb-1">
+            <strong>Email:</strong> {{ solicitacao.usuario.email }}<br>
+            <strong>Membro desde:</strong> {{ solicitacao.usuario.data_criacao.strftime('%d/%m/%Y') }}
+        </p>
+        <div class="d-flex justify-content-end">
+            <a href="{{ url_for('admin.aprovar_upgrade', solicitacao_id=solicitacao.id) }}" class="btn btn-sm btn-outline-success">Aprovar/Rejeitar</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-success">Nenhuma solicitação de upgrade pendente!</div>
+{% endif %}
+{% endblock %}

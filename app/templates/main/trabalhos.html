@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Trabalhos Acadêmicos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Trabalhos Acadêmicos</h1>
+    {% if current_user.plano == 'premium' %}
+    <a href="{{ url_for('main.novo_trabalho') }}" class="btn btn-primary">Novo Trabalho</a>
+    {% endif %}
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form class="row g-3">
+            <div class="col-md-4">
+                <label for="busca" class="form-label">Buscar</label>
+                <input type="text" class="form-control" id="busca" name="q" placeholder="Título, autor ou palavras-chave" value="{{ request.args.get('q', '') }}">
+            </div>
+            <div class="col-md-3">
+                <label for="disciplina" class="form-label">Disciplina</label>
+                <select id="disciplina" class="form-select" name="disciplina">
+                    <option value="">Todas</option>
+                    {% for disciplina in disciplinas %}
+                    <option value="{{ disciplina }}" {% if request.args.get('disciplina') == disciplina %}selected{% endif %}>{{ disciplina }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="tipo" class="form-label">Tipo</label>
+                <select id="tipo" class="form-select" name="tipo">
+                    <option value="">Todos</option>
+                    <option value="tese" {% if request.args.get('tipo') == 'tese' %}selected{% endif %}>Tese</option>
+                    <option value="dissertacao" {% if request.args.get('tipo') == 'dissertacao' %}selected{% endif %}>Dissertação</option>
+                    <option value="projeto" {% if request.args.get('tipo') == 'projeto' %}selected{% endif %}>Projeto</option>
+                    <option value="artigo" {% if request.args.get('tipo') == 'artigo' %}selected{% endif %}>Artigo</option>
+                    <option value="relatorio" {% if request.args.get('tipo') == 'relatorio' %}selected{% endif %}>Relatório</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="list-group">
+    {% for trabalho in trabalhos %}
+    <div class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ trabalho.titulo }}</h5>
+            <small class="text-muted">{{ trabalho.data_submissao.strftime('%d/%m/%Y') }}</small>
+        </div>
+        <p class="mb-1">
+            <strong>Autor(es):</strong> {{ trabalho.autores }}<br>
+            <strong>Disciplina:</strong> {{ trabalho.disciplina }} | 
+            <strong>Tipo:</strong> {{ trabalho.tipo|capitalize }}<br>
+            {% if trabalho.palavras_chave %}
+            <strong>Palavras-chave:</strong> {{ trabalho.palavras_chave }}
+            {% endif %}
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+                {% if trabalho.aprovado %}
+                <span class="badge bg-success">Aprovado</span>
+                {% else %}
+                <span class="badge bg-warning text-dark">Pendente</span>
+                {% endif %}
+                <span class="ms-2 badge bg-info text-dark">{{ trabalho.nivel_acesso|capitalize }}</span>
+            </small>
+            <a href="{{ url_for('static', filename='uploads/trabalhos/' + trabalho.arquivo) }}" class="btn btn-sm btn-outline-primary" download>Baixar</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">Nenhum trabalho encontrado.</div>
+    {% endfor %}
+</div>
+{% endblock %}

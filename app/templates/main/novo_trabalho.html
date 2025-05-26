@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Trabalho{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Submeter Novo Trabalho</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" action="{{ url_for('main.novo_trabalho') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.titulo.label(class="form-label") }}
+                        {{ form.titulo(class="form-control") }}
+                        {% if form.titulo.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.titulo.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.autores.label(class="form-label") }}
+                        {{ form.autores(class="form-control", placeholder="Separe os nomes com vírgula") }}
+                        {% if form.autores.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.autores.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.disciplina.label(class="form-label") }}
+                            {{ form.disciplina(class="form-control") }}
+                            {% if form.disciplina.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.disciplina.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.periodo.label(class="form-label") }}
+                            {{ form.periodo(class="form-control", placeholder="Ex: 2023.1") }}
+                            {% if form.periodo.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.periodo.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.tipo.label(class="form-label") }}
+                            {{ form.tipo(class="form-select") }}
+                            {% if form.tipo.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.tipo.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.nivel_acesso.label(class="form-label") }}
+                            {{ form.nivel_acesso(class="form-select") }}
+                            {% if form.nivel_acesso.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.nivel_acesso.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.palavras_chave.label(class="form-label") }}
+                        {{ form.palavras_chave(class="form-control", placeholder="Ex: python, flask, web") }}
+                        {% if form.palavras_chave.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.palavras_chave.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.arquivo.label(class="form-label") }}
+                        {{ form.arquivo(class="form-control") }}
+                        <div class="form-text">Apenas arquivos PDF ou DOCX, tamanho máximo 2MB.</div>
+                        {% if form.arquivo.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.arquivo.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #f8f9fa;
+}
+
+.jumbotron {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    background-color: #e9ecef;
+    border-radius: .3rem;
+}
+
+.card {
+    margin-bottom: 20px;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.list-group-item {
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.alert {
+    margin-bottom: 20px;
+}
+
+.badge {
+    font-weight: normal;
+}
+
+.btn {
+    margin-right: 5px;
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+}

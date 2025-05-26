@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Aprovar Upgrade{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Revisão de Solicitação de Upgrade</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>{{ solicitacao.usuario.nome }}</h5>
+                    <p>
+                        <strong>Email:</strong> {{ solicitacao.usuario.email }}<br>
+                        <strong>Membro desde:</strong> {{ solicitacao.usuario.data_criacao.strftime('%d/%m/%Y') }}<br>
+                        <strong>Solicitado em:</strong> {{ solicitacao.data_solicitacao.strftime('%d/%m/%Y') }}
+                    </p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('admin.aprovar_upgrade', solicitacao_id=solicitacao.id) }}">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.acao.label(class="form-label") }}
+                        {{ form.acao(class="form-select") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.motivo.label(class="form-label") }}
+                        {{ form.motivo(class="form-control", rows=3, placeholder="Opcional") }}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitar Upgrade{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Upgrade para Plano Premium</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h5>Benefícios do Plano Premium:</h5>
+                    <ul>
+                        <li>Submeter trabalhos acadêmicos</li>
+                        <li>Submeter provas e resoluções</li>
+                        <li>Acesso a todos os trabalhos (incluindo os não aprovados)</li>
+                        <li>Maior espaço para uploads</li>
+                    </ul>
+                </div>
+                
+                <form method="POST" action="{{ url_for('main.solicitar_upgrade') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        <label class="form-label">Plano Atual</label>
+                        <input type="text" class="form-control" value="{{ 'Gratuito' if current_user.plano == 'gratuito' else 'Premium' }}" readonly>
+                    </div>
+                    
+                    {% if current_user.plano == 'gratuito' %}
+                    <div class="mb-3">
+                        <label class="form-label">Confirme sua senha para solicitar upgrade</label>
+                        <input type="password" class="form-control" name="password_confirm" required>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2">
+                        {% if current_user.plano == 'gratuito' %}
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-arrow-up-circle"></i> Solicitar Upgrade
+                        </button>
+                        {% else %}
+                        <button type="button" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-circle"></i> Você já é Premium
+                        </button>
+                        {% endif %}
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </form>
+                
+                {% if current_user.plano == 'gratuito' %}
+                <div class="mt-3">
+                    <div class="alert alert-warning">
+                        <h6><i class="bi bi-exclamation-triangle"></i> Atenção:</h6>
+                        <ul class="mb-0">
+                            <li>Sua solicitação será analisada pela administração</li>
+                            <li>Você receberá um e-mail quando for aprovado</li>
+                            <li>O upgrade pode levar até 48 horas para ser processado</li>
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

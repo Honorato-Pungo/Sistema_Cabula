@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Nova Prova{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Submeter Nova Prova</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" action="{{ url_for('main.nova_prova') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.disciplina.label(class="form-label") }}
+                        {{ form.disciplina(class="form-control") }}
+                        {% if form.disciplina.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.disciplina.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.professor.label(class="form-label") }}
+                        {{ form.professor(class="form-control") }}
+                        {% if form.professor.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.professor.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.data_prova.label(class="form-label") }}
+                        {{ form.data_prova(class="form-control") }}
+                        {% if form.data_prova.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.data_prova.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.arquivo_enunciado.label(class="form-label") }}
+                        {{ form.arquivo_enunciado(class="form-control") }}
+                        <div class="form-text">Arquivo do enunciado da prova (PDF ou DOCX).</div>
+                        {% if form.arquivo_enunciado.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.arquivo_enunciado.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.arquivo_resolucao.label(class="form-label") }}
+                        {{ form.arquivo_resolucao(class="form-control") }}
+                        <div class="form-text">Arquivo da resolução (Opcional, PDF ou DOCX).</div>
+                        {% if form.arquivo_resolucao.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.arquivo_resolucao.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

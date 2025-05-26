@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Aprovar Trabalho{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Revisão de Trabalho</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>{{ trabalho.titulo }}</h5>
+                    <p>
+                        <strong>Autor(es):</strong> {{ trabalho.autores }}<br>
+                        <strong>Disciplina:</strong> {{ trabalho.disciplina }}<br>
+                        <strong>Tipo:</strong> {{ trabalho.tipo|capitalize }}<br>
+                        <strong>Nível de Acesso:</strong> {{ trabalho.nivel_acesso|capitalize }}<br>
+                        <strong>Submetido por:</strong> {{ trabalho.autor.nome }} ({{ trabalho.autor.email }})
+                    </p>
+                    <div class="d-grid">
+                        <a href="{{ url_for('static', filename='uploads/trabalhos/' + trabalho.arquivo) }}" class="btn btn-primary" download target="_blank">Visualizar Trabalho Completo</a>
+                    </div>
+                </div>
+                
+                <form method="POST" action="{{ url_for('admin.aprovar_trabalho', trabalho_id=trabalho.id) }}">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.acao.label(class="form-label") }}
+                        {{ form.acao(class="form-select") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.motivo.label(class="form-label") }}
+                        {{ form.motivo(class="form-control", rows=3, placeholder="Opcional") }}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

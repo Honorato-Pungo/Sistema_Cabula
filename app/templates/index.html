@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Página Inicial{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1 class="display-4">Bem-vindo ao Sistema Cabula</h1>
+    <p class="lead">Repositório centralizado de trabalhos acadêmicos e provas para estudantes de Engenharia Informática</p>
+    <hr class="my-4">
+    <p>Acesse materiais de estudo, compartilhe seus trabalhos e colabore com colegas.</p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        {% if not current_user.is_authenticated %}
+        <a class="btn btn-primary btn-lg px-4 gap-3" href="{{ url_for('auth.registrar') }}">Registrar</a>
+        <a class="btn btn-outline-secondary btn-lg px-4" href="{{ url_for('auth.login') }}">Login</a>
+        {% else %}
+        <a class="btn btn-primary btn-lg px-4 gap-3" href="{{ url_for('main.dashboard') }}">Meu Painel</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Trabalhos Acadêmicos</h5>
+                <p class="card-text">Acesse trabalhos de diversas disciplinas, incluindo teses, dissertações e projetos.</p>
+                <a href="{{ url_for('main.trabalhos') }}" class="btn btn-primary">Explorar</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Provas e Resoluções</h5>
+                <p class="card-text">Encontre provas de anos anteriores com suas respectivas resoluções.</p>
+                <a href="{{ url_for('main.provas') }}" class="btn btn-primary">Explorar</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Plano Premium</h5>
+                <p class="card-text">Tenha acesso a mais recursos e possa submeter seus próprios trabalhos.</p>
+                {% if current_user.is_authenticated and current_user.plano == 'gratuito' %}
+                <a href="{{ url_for('main.solicitar_upgrade') }}" class="btn btn-success">Upgrade</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
