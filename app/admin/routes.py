@@ -20,7 +20,7 @@ def require_admin():
         flash('Acesso restrito a administradores', 'danger')
         return redirect(url_for('main.dashboard'))
 
-@admin.route('/')
+@admin.route('/admin/painel')
 def painel():
     # Obter estatísticas para o painel
     total_usuarios = Usuario.query.count()
