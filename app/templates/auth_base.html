@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Cabula - {% block title %}{% endblock %}</title>
+    
+    <!-- Link para o Bootstrap 5.1.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Estilos customizados -->
+    <style>
+        body {
+            background-color: #e0e4e8; /* Tom suave de cinza claro */
+            font-family: 'Arial', sans-serif;
+        }
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Sombra suave */
+            overflow: hidden;
+            background-color: #ffffff; /* Cor de fundo do card */
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4a90e2; /* Azul elegante para o título */
+        }
+        .card-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        .btn-link {
+            text-decoration: none;
+        }
+        .btn-link:hover {
+            color: #2c3e50; /* Azul mais escuro para o hover */
+            text-decoration: none;
+        }
+        .text-center h2 {
+            font-size: 2.5rem;
+            color: #34495e; /* Azul escuro elegante */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Páginas de Autenticação -->
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="card shadow-lg" style="width: 100%; max-width: 500px;">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-link" style="text-decoration: none;">
+                        <h2>Sistema Cabula</h2>
+                    </a>
+                </div>
+
+    <!-- Mensagens Flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            <div class="d-flex align-items-center">
+                                {% if category == 'success' %}
+                                    <i class="fas fa-check-circle me-2"></i>
+                                {% elif category == 'danger' %}
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                {% elif category == 'warning' %}
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                {% elif category == 'info' %}
+                                    <i class="fas fa-info-circle me-2"></i>
+                                {% endif %}
+                                <div>{{ message }}</div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+
+                <!-- Conteúdo da página de autenticação -->
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

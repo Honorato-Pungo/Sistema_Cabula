@@ -8,7 +8,7 @@ from flask_migrate import Migrate
 from config import Config
 from flask_mail import Mail
 
-
+# Inicializando as extensões
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
@@ -16,12 +16,11 @@ limiter = Limiter(key_func=get_remote_address)
 migrate = Migrate()
 mail = Mail()
 
-
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
-    
-    # Initialize extensions
+
+    # Inicializa as extensões
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
@@ -29,22 +28,21 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     mail.init_app(app)
 
-    
-    # Configure login manager
+    # Configura o login manager
     login_manager.login_view = 'auth.login'
     login_manager.login_message_category = 'info'
-    
-    # Register blueprints
+
+    # Registra os blueprints
     from app.auth.routes import auth
     from app.main.routes import main
     from app.admin.routes import admin
-    
+
     app.register_blueprint(auth)
     app.register_blueprint(main)
     app.register_blueprint(admin)
 
-    # Create database tables
-    with app.app_context():
-        db.create_all()
-    
+    # Não usamos db.create_all() aqui, agora gerenciamos o banco com migrações
+    # As migrações são aplicadas com os comandos flask db migrate e flask db upgrade
+
     return app
+

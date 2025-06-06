@@ -1,11 +1,8 @@
-{% extends "base.html" %}
+{% extends "auth_base.html" %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
             <div class="card-header">
                 <h4>Login</h4>
             </div>
@@ -46,7 +43,4 @@
                     <a href="{{ url_for('auth.registrar') }}">Não tem uma conta? Registre-se</a>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
