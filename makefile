@@ -16,7 +16,7 @@ migrate:
 	FLASK_APP=$(FLASK_APP) flask db migrate
 
 # Alvo para aplicar as migrações ao banco
-upgrade:
+upgrade-db:
 	FLASK_APP=$(FLASK_APP) flask db upgrade
 
 # Alvo de limpeza
@@ -47,6 +47,6 @@ help:
 	@echo "  run      - Inicia o servidor Flask"
 	@echo "  init-db  - Inicializa as migrações do banco de dados"
 	@echo "  migrate  - Cria uma nova migração com base nas alterações do modelo"
-	@echo "  upgrade  - Aplica as migrações ao banco de dados"
+	@echo "  upgrade-db  - Aplica as migrações ao banco de dados"
 	@echo "  clean    - Remove todos os diretórios __pycache__ e arquivos .pyc"
 
