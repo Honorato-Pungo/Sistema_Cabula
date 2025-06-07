@@ -4,12 +4,12 @@ __pycache__
 *$py.class
 
 # Diretórios de ambientes virtuais
-venv/
-env/
-ENV/
-.venv/
-.env/
-venv.bak/
+venv
+env
+ENV
+.venv
+.env
+venv.bak
 
 # Arquivos de configuração do ambiente
 *.env
