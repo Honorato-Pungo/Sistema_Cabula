@@ -26,7 +26,24 @@
             </div>
         </div>
     </div>
+
     <div class="col-md-8">
+        <!-- Seção de MFA (Agora corretamente posicionada abaixo do perfil do usuário) -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Segurança: Autenticação Multifatorial (MFA)</h5>
+            </div>
+            <div class="card-body">
+                {% if current_user.mfa_secret %}
+                    <p class="text-success">MFA ativado! Sua conta está protegida por autenticação multifatorial.</p>
+                    <a href="{{ url_for('auth.mfa_deactivate') }}" class="btn btn-danger">Desativar MFA</a>
+                {% else %}
+                    <p class="text-muted">MFA não está ativado. Recomendamos ativá-lo para aumentar a segurança da sua conta.</p>
+                    <a href="{{ url_for('auth.mfa_setup') }}" class="btn btn-primary">Ativar MFA</a>
+                {% endif %}
+            </div>
+        </div>
+
         <div class="card mb-4">
             <div class="card-header">
                 <h5>Minhas Estatísticas</h5>
@@ -52,7 +69,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="card">
             <div class="card-header">
                 <h5>Atividades Recentes</h5>

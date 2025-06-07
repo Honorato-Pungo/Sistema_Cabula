@@ -22,6 +22,10 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Lembrar-me')
     submit = SubmitField('Login')
 
-class MFAForm(FlaskForm):
+"""class MFAForm(FlaskForm):
     mfa_code = IntegerField('Código de Verificação', validators=[DataRequired()])
+    submit = SubmitField('Verificar')"""
+
+class MFAForm(FlaskForm):
+    mfa_code = StringField('Código MFA', validators=[DataRequired(), Length(min=6, max=6)])
     submit = SubmitField('Verificar')

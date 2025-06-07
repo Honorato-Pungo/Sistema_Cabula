@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Configurar MFA{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h4>Configuração da Verificação em Duas Etapas (MFA)</h4>
+  </div>
+  <div class="card-body">
+    <p>Escaneie o QR Code abaixo com seu app autenticador (Google Authenticator, Authy, etc):</p>
+    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code MFA" />
+
+    <p>Ou insira este código manualmente: <strong>{{ secret }}</strong></p>
+
+    <form method="POST" action="{{ url_for('auth.mfa_setup_confirm') }}">
+      <div class="mb-3">
+        <label for="code" class="form-label">Insira o código gerado no seu app</label>
+        <input type="text" id="code" name="code" class="form-control" required autofocus>
+      </div>
+      <button type="submit" class="btn btn-primary">Confirmar MFA</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -38,7 +38,7 @@ def index():
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    print(f"Usuário logado: {current_user.username}")
+    print(f"Usuário logado: {current_user.nome}")
     return render_template('main/dashboard.html')
 
 @main.route('/trabalhos')

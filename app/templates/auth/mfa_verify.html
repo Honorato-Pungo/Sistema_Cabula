@@ -3,53 +3,50 @@
 {% block title %}Verificação MFA{% endblock %}
 
 {% block content %}
-<div class="card-header">
+
     <h4>Verificação em Duas Etapas</h4>
-</div>
-<div class="card-body">
-    <p>Enviamos um código de verificação para o seu email. Por favor, insira-o abaixo:</p>
+  </div>
+  <div class="card-body">
+    <p>Por favor, insira o código do seu app autenticador:</p>
+
     <form method="POST" action="{{ url_for('auth.mfa_verify') }}">
-        {{ form.hidden_tag() }}
-        <div class="mb-3">
-            {{ form.mfa_code.label(class="form-label") }}
-            {{ form.mfa_code(class="form-control") }}
-            {% if form.mfa_code.errors %}
-                <div class="invalid-feedback">
-                    {% for error in form.mfa_code.errors %}
-                        {{ error }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-        </div>
-        <div class="d-grid">
-            {{ form.submit(class="btn btn-primary") }}
-        </div>
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.mfa_code.label(class="form-label") }}
+        {{ form.mfa_code(class="form-control") }}
+        {% if form.mfa_code.errors %}
+          <div class="invalid-feedback d-block">
+            {% for error in form.mfa_code.errors %}
+              {{ error }}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="d-grid">
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
     </form>
-    
+
     {% if time_remaining > 0 %}
-    <p id="timer" class="mt-3">Tempo restante para a expiração do código: <span id="countdown">{{ time_remaining | int }}</span> segundos</p>
-    <script>
-        // Verifica se o elemento existe antes de tentar acessá-lo
+      <p class="mt-3">Tempo restante para expiração do código: <span id="countdown">{{ time_remaining|int }}</span> segundos</p>
+      <script>
         const countdownElement = document.getElementById("countdown");
         if (countdownElement) {
-            let timeRemaining = {{ time_remaining | int }};
-            const countdown = setInterval(() => {
-                if (timeRemaining > 0) {
-                    timeRemaining -= 1;
-                    countdownElement.textContent = timeRemaining;
-                } else {
-                    clearInterval(countdown);
-                    const resendButton = document.getElementById("resend-button");
-                    if (resendButton) {
-                        resendButton.style.display = "block"; // Exibe o botão de reenvio
-                    }
-                }
-            }, 1000);
+          let timeRemaining = {{ time_remaining|int }};
+          const countdown = setInterval(() => {
+            if (timeRemaining > 0) {
+              timeRemaining--;
+              countdownElement.textContent = timeRemaining;
+            } else {
+              clearInterval(countdown);
+            }
+          }, 1000);
         }
-    </script>
+      </script>
     {% else %}
-    <p id="timer" class="mt-3">O código expirou.</p>
-    <a href="{{ url_for('auth.resend_mfa_code') }}" id="resend-button" class="btn btn-link mt-3" style="display:none;">Enviar novamente o código</a>
+      <p class="mt-3 text-danger">O código expirou.</p>
+      <a href="{{ url_for('auth.resend_mfa_code') }}" class="btn btn-link mt-2">Reenviar código</a>
     {% endif %}
-</div>
+
 {% endblock %}

@@ -29,7 +29,7 @@ class Config:
     RATELIMIT_DEFAULT = "200 per day;50 per hour;10 per minute"
     
     # MFA settings
-    MFA_EXPIRATION = 60  # 1 minutes in seconds
+    MFA_EXPIRATION = 180  # 1 minutes in seconds
     
     # Email settings (for MFA)
     # Configurações do Flask-Mail
