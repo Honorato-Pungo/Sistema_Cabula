@@ -27,7 +27,7 @@
                 <span class="ms-2 badge bg-info text-dark">{{ trabalho.nivel_acesso|capitalize }}</span>
             </small>
             <div>
-                <a href="{{ url_for('static', filename='uploads/trabalhos/' + trabalho.arquivo) }}" class="btn btn-sm btn-outline-primary" download target="_blank">Visualizar</a>
+                <a href="{{ url_for('static', filename='../../uploads/trabalhos/' + trabalho.arquivo) }}" class="btn btn-sm btn-outline-primary" download target="_blank">Visualizar</a>
                 <a href="{{ url_for('admin.aprovar_trabalho', trabalho_id=trabalho.id) }}" class="btn btn-sm btn-outline-success ms-2">Aprovar/Rejeitar</a>
             </div>
         </div>

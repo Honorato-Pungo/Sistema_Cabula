@@ -1,0 +1,67 @@
+# Bytecode Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Diretórios de ambientes virtuais
+venv/
+env/
+ENV/
+.venv/
+.env/
+venv.bak/
+
+# Arquivos de configuração do ambiente
+*.env
+*.venv
+*.virtualenv
+.venv/
+
+# Ferramentas de IDEs/Editors
+.idea/
+.vscode/
+
+# Arquivos de logs
+*.log
+
+# Arquivos de banco de dados locais
+*.sqlite3
+*.db
+
+# Arquivos de compilação de pacotes
+*.egg
+*.egg-info/
+dist/
+build/
+sdist/
+
+# Teste de coverage
+.coverage
+*.cover
+.coverage.*
+
+# Arquivos de cache do Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Arquivos de backup
+*~
+*.bak
+*.swp
+
+# Arquivos de dependências do pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Arquivos de configuração do sistema
+*.DS_Store
+*.directory
+Thumbs.db
+
+# Arquivos de caches de pacotes
+.cache/
+
+# Outros
+extras/

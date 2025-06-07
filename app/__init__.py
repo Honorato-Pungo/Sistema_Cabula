@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
@@ -7,6 +7,9 @@ from flask_limiter.util import get_remote_address
 from flask_migrate import Migrate
 from config import Config
 from flask_mail import Mail
+import os
+from flask import Flask, render_template
+from flask_session import Session
 
 # Inicializando as extensões
 db = SQLAlchemy()
@@ -32,17 +35,31 @@ def create_app(config_class=Config):
     login_manager.login_view = 'auth.login'
     login_manager.login_message_category = 'info'
 
+    app.config['SESSION_TYPE'] = 'filesystem'  # Tipo de sessão (pode ser 'filesystem' ou 'redis')
+    app.config['SESSION_PERMANENT'] = True
+    Session(app)
+    
     # Registra os blueprints
     from app.auth.routes import auth
     from app.main.routes import main
     from app.admin.routes import admin
+    #from app.errors.routes import errors
 
     app.register_blueprint(auth)
     app.register_blueprint(main)
     app.register_blueprint(admin)
+    #app.register_blueprint(errors)  # Registra o blueprint de erros
 
-    # Não usamos db.create_all() aqui, agora gerenciamos o banco com migrações
-    # As migrações são aplicadas com os comandos flask db migrate e flask db upgrade
+    # Verificar e criar o diretório de uploads se não existir
+    upload_folder = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static', 'uploads')
+    if not os.path.exists(upload_folder):
+        os.makedirs(upload_folder)
+
+    # Manipulador para o erro 429 (Too Many Requests)
+    """@app.errorhandler(429)
+    def rate_limit_error(e):
+        # Redirecionar o usuário para a página de erro
+        return redirect(url_for('errors.limite_excedido'))
+        """
 
     return app
-

@@ -226,14 +226,19 @@ Este `Makefile` automatiza tarefas comuns no desenvolvimento com Flask, como rod
 
 ### 🔧 Comandos disponíveis
 
-| Comando         | Descrição                                                                 |
-|-----------------|-----------------------------------------------------------------------------|
-| `make run`      | Inicia o servidor Flask usando o arquivo `wsgi.py` como ponto de entrada.  |
-| `make init-db`  | Inicializa a estrutura de migrações com `flask db init`.                   |
-| `make migrate`  | Gera uma nova migração com base nas alterações feitas nos modelos.         |
-| `make upgrade`  | Aplica as migrações pendentes ao banco de dados.                           |
-| `make clean`    | Remove todos os diretórios `__pycache__` e arquivos `.pyc` do projeto.     |
-| `make help`     | Exibe a lista de comandos disponíveis com suas descrições.                 |
+| Comando               | Descrição                                                                  |
+|-----------------------|----------------------------------------------------------------------------|
+| `make run`            | Inicia o servidor Flask usando o arquivo `wsgi.py` como ponto de entrada.  |
+| `USE_HTTPS=TRUE`      | Inicia o servidor Flask com HTTPS (`make run USE_HTTPS=TRUE`)              |
+| `make init-db`        | Inicializa a estrutura de migrações com `flask db init`.                   |
+| `make migrate`        | Gera uma nova migração com base nas alterações feitas nos modelos.         |
+| `make upgrade`        | Aplica as migrações pendentes ao banco de dados.                           |
+| `make clean`          | Remove todos os diretórios `__pycache__` e arquivos `.pyc` do projeto.     |
+| `make install`        | Cria o ambiente virtual (se necessário) e instala as dependências          |
+| `create-venv`         | Cria o ambiente virtual                                                    |
+| `install-dependencies`| Instala dependências do requirements.txt                                   |
+| `create-ssl-certs`    | Cria certificados SSL autoassinados (Linux)                                |
+| `make help`           | Exibe a lista de comandos disponíveis com suas descrições.                 |
 
 ### 🧩 Requisitos
 

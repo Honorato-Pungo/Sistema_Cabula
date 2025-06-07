@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limite de Tentativas Excedido</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-light">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card shadow-lg p-4 rounded-4 w-100" style="max-width: 400px; opacity: 0;" id="error-box">
+            <div class="d-flex justify-content-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-exclamation-circle text-danger" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 8 8A8 8 0 0 0 8 0zM7.002 5a1 1 0 0 1 2 0v4a1 1 0 0 1-2 0V5zm0 6a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/>
+                </svg>
+            </div>
+            <h1 class="text-center text-danger mb-3 animate__animated animate__fadeInUp">Limite de Tentativas Excedido</h1>
+            <p class="text-center text-muted mb-4 animate__animated animate__fadeInUp animate__delay-1s">
+                Você atingiu o número máximo de tentativas de login. Por favor, tente novamente mais tarde.
+            </p>
+            
+            <!-- Contador de tempo para esperar -->
+            <p class="text-center text-muted mb-4" id="timer" style="font-size: 1.2rem;">
+                Tempo restante: <span id="countdown">30:00</span>
+            </p>
+            
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary w-100 animate__animated animate__fadeInUp animate__delay-2s" id="login-btn" style="display: none;">
+                Voltar para o login
+            </a>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS e dependências -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <!-- Animação CSS (Animate.css) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+  <script>
+        // Função para formatar os minutos e segundos
+        function formatTime(seconds) {
+            var minutes = Math.floor(seconds / 60);
+            var remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
+
+        // Função para iniciar o contador
+        function startCountdown(duration) {
+            var countdownElement = document.getElementById('countdown');
+            var loginButton = document.getElementById('login-btn');
+            var timer = duration, minutes, seconds;
+
+            var countdownInterval = setInterval(function() {
+                minutes = Math.floor(timer / 60);
+                seconds = timer % 60;
+
+                countdownElement.textContent = formatTime(timer);
+
+                // Se o tempo acabar
+                if (timer <= 0) {
+                    clearInterval(countdownInterval);
+                    loginButton.style.display = 'block';  // Exibe o botão de login
+                    countdownElement.style.display = 'none';  // Esconde o temporizador
+                    setTimeout(function() {
+                        //location.reload();  // Recarrega a página
+                    }, 1000); // Espera 1 segundo antes de recarregar
+                } else {
+                    timer--;
+                }
+            }, 1000); // Atualiza a cada 1 segundo
+        }
+
+        window.addEventListener("load", function() {
+            // Usando o tempo restante passado pelo backend
+            var timeRemaining = {{ time_remaining | round(0) }};
+            startCountdown(timeRemaining);
+
+            // Animação para exibir a página de erro
+            document.getElementById('error-box').classList.add('animate__fadeIn');
+            document.getElementById('error-box').style.opacity = 1;
+        });
+    </script>
+</body>
+</html>
