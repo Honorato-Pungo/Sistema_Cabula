@@ -91,3 +91,7 @@ Thumbs.db
 # Outros
 # ========================
 extras/
+flask_session/*
+instance/*
+migrations/*
+
