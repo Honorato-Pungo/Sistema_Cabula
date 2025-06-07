@@ -28,25 +28,4 @@
       </div>
     </form>
 
-    {% if time_remaining > 0 %}
-      <p class="mt-3">Tempo restante para expiração do código: <span id="countdown">{{ time_remaining|int }}</span> segundos</p>
-      <script>
-        const countdownElement = document.getElementById("countdown");
-        if (countdownElement) {
-          let timeRemaining = {{ time_remaining|int }};
-          const countdown = setInterval(() => {
-            if (timeRemaining > 0) {
-              timeRemaining--;
-              countdownElement.textContent = timeRemaining;
-            } else {
-              clearInterval(countdown);
-            }
-          }, 1000);
-        }
-      </script>
-    {% else %}
-      <p class="mt-3 text-danger">O código expirou.</p>
-      <a href="{{ url_for('auth.resend_mfa_code') }}" class="btn btn-link mt-2">Reenviar código</a>
-    {% endif %}
-
 {% endblock %}

@@ -100,7 +100,7 @@ def mfa_setup():
     session['temp_mfa_secret'] = secret
 
     totp = pyotp.TOTP(secret)
-    uri = totp.provisioning_uri(name=current_user.email, issuer_name="SeuSistema")
+    uri = totp.provisioning_uri(name=current_user.email, issuer_name="Cabula")
 
     img = qrcode.make(uri)
     buf = io.BytesIO()
@@ -162,7 +162,7 @@ def mfa_verify():
             db.session.commit()
 
             flash('Login com MFA realizado!', 'success')
-            return redirect(url_for('main.index'))
+            return redirect(url_for('main.dashboard'))
         else:
             flash('Código MFA inválido.', 'danger')
 
@@ -235,4 +235,37 @@ def mfa_deactivate():
     current_user.mfa_secret = None
     db.session.commit()
     flash('MFA desativado com sucesso!', 'success')
-    return redirect(url_for('auth.painel'))  # Redireciona para o painel do usuário
+    return redirect(url_for('main.dashboard'))  # Redireciona para o painel do usuário
+
+# ========== SEND MFA CODE BY EMAIL ==========
+@auth.route('/send_mfa_email', methods=['POST'])
+def send_mfa_email_request():
+    email = request.form.get('email')
+
+    usuario = Usuario.query.filter_by(email=email).first()
+    if usuario and usuario.is_locked:
+        # Aqui é onde geramos o link de autenticação único
+        token = generate_auth_token(usuario)  # Função para gerar o token
+        send_email_with_auth_token(usuario.email, token)
+        flash('Link de autenticação enviado para o seu e-mail!', 'info')
+        return redirect(url_for('auth.login'))
+
+    flash('Não encontramos uma conta com esse e-mail ou a conta não está bloqueada.', 'danger')
+    return redirect(url_for('auth.login'))
+
+@auth.route('/authenticate/<token>')
+def authenticate_with_token(token):
+    try:
+        data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+        usuario = Usuario.query.get(data['user_id'])
+
+        if usuario:
+            login_user(usuario)
+            flash('Você foi autenticado com sucesso via e-mail!', 'success')
+            return redirect(url_for('main.index'))
+    except jwt.ExpiredSignatureError:
+        flash('O link de autenticação expirou.', 'danger')
+    except jwt.InvalidTokenError:
+        flash('Token inválido.', 'danger')
+
+    return redirect(url_for('auth.login'))

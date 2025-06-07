@@ -2,6 +2,8 @@ from flask import current_app
 from flask_mail import Message
 from app import mail
 import pyotp
+import jwt
+import datetime
 
 
 def send_mfa_email(email, mfa_code):
@@ -25,3 +27,17 @@ def generate_mfa_secret():
 def verify_mfa_code(secret, code):
     totp = pyotp.TOTP(secret)
     return totp.verify(code)
+
+def generate_auth_token(user):
+    expiration = datetime.datetime.utcnow() + datetime.timedelta(minutes=15)  # Token válido por 15 minutos
+    token = jwt.encode({
+        'user_id': user.id,
+        'exp': expiration
+    }, current_app.config['SECRET_KEY'], algorithm='HS256')
+
+    return token
+
+def send_email_with_auth_token(email, token):
+    msg = Message('Autenticação via E-mail', sender='no-reply@seusite.com', recipients=[email])
+    msg.body = f'Clique no link abaixo para autenticar sua conta:\n\n{url_for("auth.authenticate_with_token", token=token, _external=True)}'
+    mail.send(msg)
