@@ -1,0 +1,18 @@
+{% extends "auth_base.html" %}
+
+{% block title %}Recuperação de Conta{% endblock %}
+
+{% block content %}
+<div class="card-header">
+    <h4>Recuperação de Conta</h4>
+</div>
+<div class="card-body">
+    <form method="POST" action="{{ url_for('auth.recuperar_conta') }}">
+        <div class="mb-3">
+            <label for="email" class="form-label">E-mail</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar Link de Recuperação</button>
+    </form>
+</div>
+{% endblock %}

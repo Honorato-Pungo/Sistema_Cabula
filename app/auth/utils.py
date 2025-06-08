@@ -1,4 +1,5 @@
 from flask import current_app
+from flask import url_for, flash, current_app
 from flask_mail import Message
 from app import mail
 import pyotp
@@ -37,7 +38,12 @@ def generate_auth_token(user):
 
     return token
 
-def send_email_with_auth_token(email, token):
-    msg = Message('Autenticação via E-mail', sender='no-reply@seusite.com', recipients=[email])
-    msg.body = f'Clique no link abaixo para autenticar sua conta:\n\n{url_for("auth.authenticate_with_token", token=token, _external=True)}'
-    mail.send(msg)
+def send_email_with_auth_token(to_email, token):
+    msg = Message("Verificação de MFA", recipients=[to_email])
+    msg.body = f"Código de verificação: {token}"
+
+    try:
+        mail.send(msg)
+        flash("E-mail de verificação enviado com sucesso!", "success")
+    except smtplib.SMTPException as e:
+        flash(f"Erro ao enviar o e-mail: {str(e)}", "danger")

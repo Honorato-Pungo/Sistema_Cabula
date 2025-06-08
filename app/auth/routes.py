@@ -8,11 +8,12 @@ from flask_login import login_user, logout_user, current_user, login_required
 from app.auth.forms import LoginForm, RegistrationForm, MFAForm
 from app.models import Usuario, Sessao
 from app import db, bcrypt, mail
-from app.auth.utils import send_mfa_email
+from app.auth.utils import send_mfa_email, generate_auth_token, send_email_with_auth_token
 from datetime import datetime, timedelta
 import pyotp
 from user_agents import parse
 from flask_mail import Message
+import pdb
 
 auth = Blueprint('auth', __name__)
 logger = logging.getLogger(__name__)
@@ -44,9 +45,13 @@ def login():
         if usuario and usuario.verificar_senha(form.senha.data):
             if usuario.tentativas_falhadas >= 10:
                 usuario.is_locked = True
+                usuario.email_confirmado = False
+                is_locked = True
+                session['mfa_email'] = usuario.email
                 db.session.commit()
                 flash('Conta bloqueada por tentativas incorretas. Contate o suporte.', 'danger')
-                return redirect(url_for('auth.login'))
+                #return redirect(url_for('auth.login'))
+                return render_template('auth/login.html', form=form, is_locked=is_locked)
 
             usuario.tentativas_falhadas = 0
             db.session.commit()
@@ -85,6 +90,8 @@ def login():
         else:
             flash('Credenciais inválidas.', 'danger')
 
+    # Ponto de interrupção para debug
+    #pdb.set_trace()
     return render_template('auth/login.html', title='Login', form=form)
 
 
@@ -222,7 +229,7 @@ def logout():
 
 # ========== ALERTA DE SEGURANÇA ==========
 def send_security_alert_email(email):
-    msg = Message('Alerta de Login', sender='no-reply@seusite.com', recipients=[email])
+    msg = Message('Alerta de Login', sender='jkotingo25@gmail.com', recipients=[email])
     msg.body = '''
 Detectamos uma tentativa de login na sua conta. Se não foi você, altere sua senha.
 Se foi você, ignore este e-mail.
@@ -240,7 +247,7 @@ def mfa_deactivate():
 # ========== SEND MFA CODE BY EMAIL ==========
 @auth.route('/send_mfa_email', methods=['POST'])
 def send_mfa_email_request():
-    email = request.form.get('email')
+    email = session.get('mfa_email')
 
     usuario = Usuario.query.filter_by(email=email).first()
     if usuario and usuario.is_locked:
@@ -251,6 +258,10 @@ def send_mfa_email_request():
         return redirect(url_for('auth.login'))
 
     flash('Não encontramos uma conta com esse e-mail ou a conta não está bloqueada.', 'danger')
+    
+    # Ponto de interrupção para debug
+    pdb.set_trace()
+    
     return redirect(url_for('auth.login'))
 
 @auth.route('/authenticate/<token>')
