@@ -23,10 +23,13 @@ class Usuario(db.Model, UserMixin):
     # Campos de segurança
     email_confirmado = db.Column(db.Boolean, default=False, nullable=False)  # Flag para confirmar o e-mail
     email_confirmacao_token = db.Column(db.String(100), nullable=True)  # Token para confirmação de e-mail
-    mfa_secret = db.Column(db.String(32), default=True,  nullable=True)  # Chave de MFA (autenticação multifatorial)
+    mfa_secret = db.Column(db.String(32), nullable=True)  # Chave de MFA (autenticação multifatorial)
     deletado_em = db.Column(db.DateTime, nullable=True)  # Soft delete (exclusão lógica)
     is_locked = db.Column(db.Boolean, default=False, nullable=False)  # Flag para conta bloqueada devido a falhas
     tentativas_falhadas = db.Column(db.Integer, default=0)  # Contador de tentativas falhadas
+    # Exemplo de campo no seu modelo Usuario
+    mfa_tipo = db.Column(db.String(10), nullable=True)  # valores: 'email' ou 'app'
+
 
     data_criacao = db.Column(db.DateTime, default=datetime.now)
 
@@ -166,6 +169,7 @@ class Sessao(db.Model):
     ip = db.Column(db.String(45), nullable=False)  # Suporta IPv6
     dispositivo = db.Column(db.String(255), nullable=False)
     navegador = db.Column(db.String(255), nullable=False)
+    fingerprint = db.Column(db.String(255), nullable=False)
     data_login = db.Column(db.DateTime, default=datetime.utcnow)
     expirado = db.Column(db.Boolean, default=False, nullable=False)
     

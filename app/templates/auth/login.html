@@ -3,9 +3,12 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-    <div class="card-header">
-        <h4>Login</h4>
-    </div>
+<div class="card-header text-center">
+    <h4 class="mb-0">
+        <i class="bi bi-shield-lock me-2"></i> Login
+    </h4>
+</div>
+
     <div class="card-body">
         <form method="POST" action="{{ url_for('auth.login') }}">
             {{ form.hidden_tag() }}
@@ -13,9 +16,9 @@
             <!-- Campo de E-mail -->
             <div class="mb-3">
                 {{ form.email.label(class="form-label") }}
-                {{ form.email(class="form-control") }}
+                {{ form.email(class="form-control", placeholder="Digite seu e-mail") }}
                 {% if form.email.errors %}
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback d-block">
                         {% for error in form.email.errors %}
                             {{ error }}
                         {% endfor %}
@@ -26,9 +29,9 @@
             <!-- Campo de Senha -->
             <div class="mb-3">
                 {{ form.senha.label(class="form-label") }}
-                {{ form.senha(class="form-control") }}
+                {{ form.senha(class="form-control", placeholder="Digite sua senha") }}
                 {% if form.senha.errors %}
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback d-block">
                         {% for error in form.senha.errors %}
                             {{ error }}
                         {% endfor %}
@@ -43,23 +46,27 @@
             </div>
 
             <!-- Botão de login -->
-            <div class="d-grid">
-                {{ form.submit(class="btn btn-primary") }}
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Entrar
+                </button>
             </div>
         </form>
 
         <!-- Link para registro de conta -->
-        <div class="mt-3">
-            <a href="{{ url_for('auth.registrar') }}">Não tem uma conta? Registre-se</a>
+        <div class="mt-4 text-center">
+            <a href="{{ url_for('auth.registrar') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-person-plus"></i> Não tem uma conta? Registre-se
+            </a>
         </div>
 
-        <!-- Caso o usuário tenha a conta bloqueada, mostre a opção de enviar um link de autenticação por e-mail -->
+        <!-- Botão de autenticação por e-mail, se conta estiver bloqueada -->
         {% if is_locked %}
-        <div class="mt-3">
+        <div class="mt-3 text-center">
             <form method="POST" action="{{ url_for('auth.send_mfa_email_request') }}">
-                <div>
-                    <button type="submit" class="btn btn-link">Solicitar autenticação por e-mail</button>
-                </div>
+                <button type="submit" class="btn btn-warning btn-sm">
+                    <i class="bi bi-envelope"></i> Solicitar autenticação por e-mail
+                </button>
             </form>
         </div>
         {% endif %}

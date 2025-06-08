@@ -50,6 +50,7 @@
 
         // Função para iniciar o contador
         function startCountdown(duration) {
+            const timerElement = document.getElementById('timer');
             var countdownElement = document.getElementById('countdown');
             var loginButton = document.getElementById('login-btn');
             var timer = duration, minutes, seconds;
@@ -64,7 +65,7 @@
                 if (timer <= 0) {
                     clearInterval(countdownInterval);
                     loginButton.style.display = 'block';  // Exibe o botão de login
-                    countdownElement.style.display = 'none';  // Esconde o temporizador
+                    timerElement.style.display = 'none';  // Esconde o temporizador
                     setTimeout(function() {
                         //location.reload();  // Recarrega a página
                     }, 1000); // Espera 1 segundo antes de recarregar

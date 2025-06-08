@@ -1,8 +1,11 @@
 import os
+from datetime import datetime, timedelta
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'uma-chave-secreta-muito-segura'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instance', 'site.db')
+    BASE_URL_IP = os.getenv('BASE_URL_IP', 'http://localhost:5000')  # valor padrão para ambiente local
+    BASE_URL_IP_HTTPS = os.getenv('BASE_URL_IP_HTTPS', 'http://localhost:5000')  # valor padrão para ambiente local usando https
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
@@ -10,6 +13,7 @@ class Config:
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_NAME = 'session_cookie'  # Nome do cookie de sessão
 
     # Configuração para usar o Flask-Session com armazenamento no sistema de arquivos
     SESSION_TYPE = 'filesystem'  # Usando filesystem para armazenar as sessões
@@ -28,8 +32,15 @@ class Config:
     # Rate limiting
     RATELIMIT_DEFAULT = "200 per day;50 per hour;10 per minute"
     
+    # Configurações de sessão no Flask
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=10)  # Define a expiração para 10 minutos
+    SESSION_REFRESH_EACH_REQUEST = True
+
+
     # MFA settings
     MFA_EXPIRATION = 180  # 1 minutes in seconds
+
+    COOLDOWN_TIME = 60 * 1;
     
     # Email settings (for MFA)
     # Configurações do Flask-Mail
@@ -37,6 +48,6 @@ class Config:
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')  # Coloque suas credenciais
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'no-reply@example.com')
+    MAIL_USERNAME = os.environ.get('EMAIL_USERNAME')  # Coloque suas credenciais
+    MAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = os.environ.get('EMAIL_DEFAULT_SENDER', 'no-reply@example.com')

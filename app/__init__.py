@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
@@ -10,6 +10,9 @@ from flask_mail import Mail
 import os
 from flask import Flask, render_template
 from flask_session import Session
+import pdb
+from datetime import datetime, timedelta
+import time
 
 # Inicializando as extensões
 db = SQLAlchemy()
@@ -56,10 +59,27 @@ def create_app(config_class=Config):
         os.makedirs(upload_folder)
 
     # Manipulador para o erro 429 (Too Many Requests)
-    """@app.errorhandler(429)
+    @app.errorhandler(429)
     def rate_limit_error(e):
         # Redirecionar o usuário para a página de erro
-        return redirect(url_for('errors.limite_excedido'))
-        """
+        ip_address = request.remote_addr
+        last_failed_login = session.get(f"last_failed_login_{ip_address}")
+
+        if last_failed_login is None:
+            last_failed_login = datetime.utcnow()
+
+        # Calcular o tempo até o desbloqueio
+        blocked_until = last_failed_login + (app.config['COOLDOWN_TIME'])
+        
+        time_remaining = blocked_until - time.time()
+        
+        # Garantir que time_remaining não seja negativo (caso o bloqueio tenha expirado)
+        if time_remaining < 0:
+            time_remaining = 0
+
+        # Limpar a chave "failed" da sessão para impedir tentativas repetidas
+        session.pop(f"failed_{ip_address}", None)
+
+        return render_template('errors/limite_excedido.html', time_remaining=time_remaining)
 
     return app

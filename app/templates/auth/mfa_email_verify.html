@@ -1,0 +1,69 @@
+{% extends "auth_base.html" %}
+
+{% block title %}Verificação por E-mail{% endblock %}
+
+{% block content %}
+<div class="card-header">
+    <h4>Verificação por E-mail</h4>
+    <h5>MFA por e-mail</h5>
+</div>
+
+<form method="POST">
+    <input 
+        type="text" 
+        name="mfa_code" 
+        id="mfa_code" 
+        placeholder="Código de 6 dígitos" 
+        class="form-control" 
+        maxlength="6"
+        required
+    >
+    <button 
+        type="submit" 
+        class="btn btn-primary mt-2" 
+        id="btn_verificar" 
+        disabled
+    >Verificar</button>
+</form>
+
+<script>
+    const input = document.getElementById('mfa_code');
+    const btn = document.getElementById('btn_verificar');
+
+    input.addEventListener('input', () => {
+        btn.disabled = input.value.length !== 6;
+    });
+</script>
+
+<hr>
+
+{% if tempo_restante > 0 %}
+    <p>
+        Você poderá solicitar um novo código em <span id="contador">{{ tempo_restante }}</span> segundos.
+    </p>
+    <button class="btn btn-secondary" disabled id="reenviar_btn">Reenviar código</button>
+
+    <script>
+        let segundos = parseInt("{{ tempo_restante }}");
+        const contador = document.getElementById('contador');
+        const btnReenviar = document.getElementById('reenviar_btn');
+
+        const interval = setInterval(() => {
+            segundos -= 1;
+            contador.innerText = segundos;
+
+            if (segundos <= 0) {
+                clearInterval(interval);
+                btnReenviar.disabled = false;
+                btnReenviar.innerText = "Reenviar código";
+            }
+        }, 1000);
+    </script>
+{% else %}
+    <form method="GET" action="{{ url_for('auth.mfa_email_verify') }}">
+        <button type="submit" class="btn btn-secondary">Reenviar código</button>
+    </form>
+{% endif %}
+
+
+{% endblock %}

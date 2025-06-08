@@ -125,24 +125,27 @@ else
 	@$(FLASK) db downgrade
 endif
 
-# Resetar migrações e banco de dados
+# Resetar migrações e banco de dados completamente
 fresh-db:
 ifeq ($(OS),Windows_NT)
 	@echo "Resetando migrações e banco de dados no Windows..."
-	@del /f /q migrations\*
-	@del /f /q instance\*
+	@if exist migrations (rmdir /s /q migrations)
+	@if exist instance (rmdir /s /q instance)
+	@mkdir migrations
+	@mkdir instance
 	@$(FLASK) db init
 	@$(FLASK) db migrate
 	@$(FLASK) db upgrade
 else
 	@echo "Resetando migrações e banco de dados no Linux/Mac..."
-	@rm -rf migrations/*
-	@rm -rf instance/*
+	@rm -rf migrations
+	@rm -rf instance
+	@mkdir -p migrations
+	@mkdir -p instance
 	@$(FLASK) db init
 	@$(FLASK) db migrate
 	@$(FLASK) db upgrade
 endif
-
 
 # Alvo de limpeza
 clean:
