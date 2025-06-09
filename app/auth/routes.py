@@ -50,8 +50,9 @@ def login():
             fingerprint = gerar_fingerprint(request)
             # Verifica se fingerprint já existe
             sessao_existente = Sessao.query.filter_by(usuario_id=usuario.id, fingerprint=fingerprint).first()
+            print("sessao exixtente",sessao_existente)
 
-            if not sessao_existente:
+            if sessao_existente and sessao_existente.fingerprint != fingerprint:
                 # Novo dispositivo detectado → enviar verificação por e-mail
                 token = generate_auth_token(usuario)
                 send_email_with_auth_token_for_new_device(usuario.email, token)
@@ -169,6 +170,7 @@ def mfa_setup_confirm():
     totp = pyotp.TOTP(secret)
     if totp.verify(code):
         current_user.mfa_secret = secret
+        current_user.mfa_tipo = session.get('mfa_tipo')
         db.session.commit()
         session.pop('temp_mfa_secret', None)
         flash('MFA ativado com sucesso!', 'success')
@@ -196,12 +198,14 @@ def mfa_verify():
             session.pop('mfa_expiry', None)
 
             ip = request.remote_addr
+            fingerprint = session.get('pending_fingerprint') or gerar_fingerprint(request)
             user_agent = parse(request.headers.get('User-Agent'))
             sessao = Sessao(
                 usuario_id=usuario.id,
                 ip=ip,
                 dispositivo=user_agent.device.family,
                 navegador=user_agent.browser.family,
+                fingerprint=fingerprint,
                 data_login=datetime.utcnow()
             )
             db.session.add(sessao)
@@ -279,36 +283,6 @@ def logout():
     logout_user()
         
     return redirect(url_for('main.index'))
-
-# Verificando a expiração da sessão antes de cada requisição
-@auth.before_request
-def verificar_sessao_expirada():
-    if '_user_id' in session:
-        # Recupera a sessão do banco de dados
-        sessao = Sessao.query.filter_by(usuario_id=session['_user_id']).first()
-        
-        if sessao and sessao.data_login < datetime.utcnow():
-             # Se a sessão expirou, faz o logout e remove o registro da sessão
-            logout_user()  # Faz o logout do usuário
-
-            db.session.delete(sessao)
-            db.session.commit()
-
-            #flash("Sua sessão expirou.", "warning")
-            return redirect(url_for('auth.login'))
-
-@auth.before_request
-def renovar_sessao():
-    # Renovar a sessão se o usuário estiver autenticado
-    if '_user_id' in session:
-        session.permanent = True  # Ativa a expiração automática
-        current_app.permanent_session_lifetime = current_app.config['PERMANENT_SESSION_LIFETIME']
-        
-        # Renovar a data de expiração da sessão no banco de dados
-        sessao = Sessao.query.filter_by(user_id=session['_user_id']).first()
-        if sessao:
-            sessao.data_login = datetime.utcnow() + current_app.config['PERMANENT_SESSION_LIFETIME']
-            db.session.commit()            
 
 # ========== ALERTA DE SEGURANÇA ==========
 def send_security_alert_email(email, message=None):
@@ -427,6 +401,7 @@ def mfa_email_verify():
         secret = usuario.mfa_secret or pyotp.random_base32()
         if not usuario.mfa_secret:
             usuario.mfa_secret = secret
+            usuario.mfa_tipo = session.get('mfa_tipo')
             db.session.commit()
 
         session['mfa_secret'] = secret
@@ -467,12 +442,14 @@ def mfa_email_verify():
             session.pop('mfa_secret', None)
 
             ip = request.remote_addr
+            fingerprint = session.get('pending_fingerprint') or gerar_fingerprint(request)
             user_agent = parse(request.headers.get('User-Agent'))
             sessao = Sessao(
                 usuario_id=usuario.id,
                 ip=ip,
                 dispositivo=user_agent.device.family,
                 navegador=user_agent.browser.family,
+                fingerprint=fingerprint,
                 data_login=datetime.utcnow()
             )
             db.session.add(sessao)
@@ -518,7 +495,7 @@ def verify_device(token):
             session['mfa_user_id'] = usuario.id
             session['mfa_expiry'] = (datetime.utcnow() + timedelta(seconds=current_app.config['MFA_EXPIRATION'])).timestamp()
 
-            if usuario.mfa_tipo == 'app':
+            if usuario.mfa_tipo.strip() == 'app':
                 return redirect(url_for('auth.mfa_verify'))
             else:
                 return redirect(url_for('auth.mfa_email_verify'))
@@ -553,7 +530,6 @@ def mfa_setup_choice():
     session['mfa_tipo'] = tipo
 
     flash(f'MFA com {tipo.upper()} selecionado. Continue a configuração.', 'info')
-    pdb.set_trace()
     
     if tipo == 'email':
         return redirect(url_for('auth.mfa_email_verify'))

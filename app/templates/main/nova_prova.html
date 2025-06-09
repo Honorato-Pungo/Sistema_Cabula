@@ -48,7 +48,7 @@
                     <div class="mb-3">
                         {{ form.arquivo_enunciado.label(class="form-label") }}
                         {{ form.arquivo_enunciado(class="form-control") }}
-                        <div class="form-text">Arquivo do enunciado da prova (PDF ou DOCX).</div>
+                        <div class="form-text">Arquivo do enunciado da prova (PDF ou DOCX), tamanho máximo 2 MB.</div>
                         {% if form.arquivo_enunciado.errors %}
                             <div class="invalid-feedback">
                                 {% for error in form.arquivo_enunciado.errors %}
@@ -60,7 +60,7 @@
                     <div class="mb-3">
                         {{ form.arquivo_resolucao.label(class="form-label") }}
                         {{ form.arquivo_resolucao(class="form-control") }}
-                        <div class="form-text">Arquivo da resolução (Opcional, PDF ou DOCX).</div>
+                        <div class="form-text">Arquivo da resolução (Opcional, PDF ou DOCX), tamanho máximo 2 MB.</div>
                         {% if form.arquivo_resolucao.errors %}
                             <div class="invalid-feedback">
                                 {% for error in form.arquivo_resolucao.errors %}

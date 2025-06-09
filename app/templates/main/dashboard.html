@@ -61,6 +61,7 @@
                 <!-- Formulário de escolha do método -->
                 {% if not current_user.mfa_secret %}
                 <form method="POST" action="{{ url_for('auth.mfa_setup_choice') }}">
+                    
                     <div class="mb-3">
                         <label for="mfa_tipo" class="form-label">Escolha o método de autenticação:</label>
                         <select name="mfa_tipo" id="mfa_tipo" class="form-select" required>

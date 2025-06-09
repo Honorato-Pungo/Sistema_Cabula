@@ -128,7 +128,7 @@ def nova_prova():
             if arquivo_resolucao and allowed_file(arquivo_resolucao.filename):
                 caminho_resolucao = salvar_arquivo(arquivo_resolucao, "provas")
             
-            pdb.set_trace()
+            #pdb.set_trace()
 
             prova = Prova(
                 disciplina=form.disciplina.data,

@@ -40,7 +40,7 @@ class Config:
     # MFA settings
     MFA_EXPIRATION = 180  # 1 minutes in seconds
 
-    COOLDOWN_TIME = 60 * 1;
+    COOLDOWN_TIME = 60 * 1
     
     # Email settings (for MFA)
     # Configurações do Flask-Mail

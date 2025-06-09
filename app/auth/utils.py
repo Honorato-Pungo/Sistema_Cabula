@@ -25,7 +25,7 @@ def send_mfa_email(email, mfa_code):
     Se você não solicitou este código, por favor ignore este email.
     '''
     try:
-        #mail.send(msg)
+        mail.send(msg)
         #flash("E-mail de verificação enviado com sucesso!", "success")
         return True
     except smtplib.SMTPException as e:
@@ -60,7 +60,7 @@ def send_email_with_auth_token(to_email, token):
     msg.body = f"Código de verificação: {verification_link}"
 
     try:
-        #mail.send(msg)
+        mail.send(msg)
         #flash("E-mail de verificação enviado com sucesso!", "success")
         pass
     except smtplib.SMTPException as e:
@@ -79,7 +79,7 @@ def send_email_with_auth_token_for_new_device(to_email, token):
     msg.body = f"Código de verificação: {verification_link}"
 
     try:
-        #mail.send(msg)
+        mail.send(msg)
         #flash("E-mail de verificação enviado com sucesso!", "success")
         pass
     except smtplib.SMTPException as e:
