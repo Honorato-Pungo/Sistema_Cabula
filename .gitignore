@@ -92,6 +92,4 @@ Thumbs.db
 # ========================
 extras/
 flask_session/*
-instance/*
-migrations/*
 

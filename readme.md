@@ -80,8 +80,8 @@ Antes de começar, você precisa garantir que tem as seguintes ferramentas insta
 1. **Clone o repositório:**
    Primeiro, clone este repositório para o seu diretório local:
    ```bash
-   git clone https://github.com/username/provas-academicas.git
-   cd provas-academicas
+   git https://github.com/Honorato-Pungo/Sistema_Cabula.git
+   cd Sistema_Cabula
     ```
 
 2. **Crie um ambiente virtual:**
@@ -179,8 +179,6 @@ Se você precisar reverter uma migração, utilize:
 ```bash
 flask db downgrade
 ```
-
-
 
 7. **Acesse a aplicação:**
    Abra o navegador e vá para `http://127.0.0.1:5000/` para acessar a aplicação localmente.
